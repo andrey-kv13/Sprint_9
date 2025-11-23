@@ -1,6 +1,5 @@
 selenium==4.15.2
 pytest==7.4.3
-pytest-allure-adaptor==2.13.2
 allure-pytest==2.13.2
 faker==20.1.0
 
