@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, develop ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, develop ]
   workflow_dispatch:  # Позволяет запускать вручную
 
 jobs:
@@ -13,10 +13,10 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         
@@ -25,10 +25,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+        
     - name: Start Selenoid
       run: |
-        docker-compose up -d
-        sleep 10  # Даем время Selenoid запуститься
+        docker compose up -d
+        sleep 15  # Даем время Selenoid запуститься
+        docker ps  # Проверяем, что контейнер запущен
+        
+    - name: Create allure-results directory
+      run: |
+        mkdir -p allure-results
         
     - name: Run tests
       env:
@@ -52,21 +62,23 @@ jobs:
         
     - name: Upload Allure Results
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: allure-results
         path: allure-results/
         retention-days: 30
+        if-no-files-found: ignore
         
     - name: Upload Allure Report
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: allure-report
         path: allure-report/
         retention-days: 30
+        if-no-files-found: ignore
         
     - name: Stop Selenoid
       if: always()
       run: |
-        docker-compose down
+        docker compose down
