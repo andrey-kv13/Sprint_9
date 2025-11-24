@@ -8,10 +8,8 @@ class TestCreateRecipe:
         "2. Заполнить все поля формы создания рецепта и нажать кнопку 'Создать рецепт'.\n"
         "3. Проверить отображение карточки и совпадение названия."
     )
-    def test_create_recipe(self, main_page, recipe_page, user_helper):
-        """Тест проверяет, что пользователь может создать рецепт"""
-        with allure.step("Авторизируемся пользователем"):
-            user_helper.register_and_login_user()
+    def test_create_recipe(self, main_page, recipe_page, logged_in_user):
+        """Тест проверяет, что пользователь может создать рецепт"""    
         with allure.step("Открываем страницу создания рецепта"):
             main_page.click_create_recipe_button()
         with allure.step("Заполняем форму создания рецепта"):

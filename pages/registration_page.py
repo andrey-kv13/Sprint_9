@@ -5,12 +5,15 @@ from config.config import Config
 class RegistrationPage(BasePage):
     
     def __init__(self, driver):
+        """Инициализирует страницу регистрации"""
         super().__init__(driver)
         
     def click_create_button(self):
+        """Нажимает на кнопку 'Создать аккаунт'"""
         self.click(rpl.REGISTER_BUTTON)
         
     def populate_registration_data(self, user_name, password, test_data=None):
+        """Заполняет форму регистрации данными пользователя"""
         if test_data is None:
             test_data = Config.test_data()
         self.send_keys(rpl.FIRST_NAME_INPUT, test_data["name"])

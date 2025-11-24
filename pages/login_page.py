@@ -4,6 +4,7 @@ from pages.base_page import BasePage
 class LoginPage(BasePage):
     
     def __init__(self, driver):
+        """Инициализирует страницу входа"""
         super().__init__(driver)
     
     def get_login_label_text(self):

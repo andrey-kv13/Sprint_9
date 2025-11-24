@@ -45,14 +45,10 @@ class BasePage:
         try:
             self.scroll_to_element(locator)
             element = self.wait.until(EC.element_to_be_clickable(locator))
-            # Пробуем обычный клик, если не получается - используем JavaScript
-            try:
-                element.click()
-            except Exception:
-                # Если элемент перекрыт, используем JavaScript клик
-                self.driver.execute_script("arguments[0].click();", element)
+            element.click()
         except TimeoutException:
-            pass
+            element = self.wait.until(EC.presence_of_element_located(locator))
+            self.driver.execute_script("arguments[0].click();", element)
     
     def send_keys(self, locator, text):
         """Ввод текста в поле"""
@@ -88,15 +84,8 @@ class BasePage:
         return self.driver.current_url
     
     def select_first_dropdown_item(self, dropdown_item_locator, dropdown_container_locator=None):
-        """
-        Выбирает первый элемент из выпадающего списка
-        
-        :param dropdown_item_locator: локатор первого элемента выпадающего списка
-        :param dropdown_container_locator: опциональный локатор контейнера выпадающего списка
-                                           для ожидания его появления перед кликом
-        """
+        """Выбирает первый элемент из выпадающего списка"""
         # Если передан локатор контейнера, ждем его появления
         if dropdown_container_locator:
             self.find_element(dropdown_container_locator)
-        # Кликаем по первому элементу из выпадающего списка
         self.click(dropdown_item_locator)

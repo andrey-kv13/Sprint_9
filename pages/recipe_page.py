@@ -6,6 +6,7 @@ from pathlib import Path
 class RecipePage(BasePage):
     
     def select_ingredient(self, first_ingredient, second_ingredient):
+        """Выбирает ингредиенты для рецепта"""
         # Выбираем первый ингредиент
         self.send_keys(recipe_locators.RECIPE_INGREDIENTS_INPUT, first_ingredient)
         self.select_first_dropdown_item(
@@ -25,10 +26,7 @@ class RecipePage(BasePage):
         self.click(recipe_locators.RECIPE_ADD_INGREDIENT_BUTTON)
         
     def select_recipe_logo(self, logo_path=None):
-        """
-        Выбирает логотип рецепта
-        :param logo_path: путь к файлу логотипа. Если не указан, используется путь из конфига
-        """
+        """Выбирает логотип рецепта"""
         if logo_path is None:
             # Получаем абсолютный путь к файлу через pathlib
             logo_path = Path(Config.RECIPE_LOGO_PATH).resolve()
@@ -59,6 +57,7 @@ class RecipePage(BasePage):
         return recipe_name
     
     def get_recipe_title(self):
+        """Получает название рецепта"""
         return self.get_element_text(recipe_locators.RECEIPE_TITLE)
     
     def is_recipe_card_displayed(self):

@@ -1,4 +1,5 @@
 import allure
+from config.config import Config
 
 @allure.feature("Регистрация пользователя")
 class TestUserRegistration:
@@ -25,10 +26,8 @@ class TestUserRegistration:
     def test_user_registration(self, registration_page, main_page, login_page):
         """Тест проверяет, что пользователь успешно зарегистрирован"""
         with allure.step("Открываем страницу регистрации"):
-            main_page.click_create_acc_button()
-            
+            main_page.click_create_acc_button()       
         with allure.step("Заполняем форму регистрации"):
-            from config.config import Config
             test_data = Config.test_data()
             registration_page.populate_registration_data(test_data["username"], test_data["password"])
         with allure.step("Ожидаем открытия страницы входа"):

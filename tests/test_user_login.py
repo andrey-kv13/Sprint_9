@@ -22,11 +22,10 @@ class TestUserLogin:
         "2. Заполнить форму входа и выполнить авторизацию.\n"
         "3. Проверить переход на главную страницу и отображение рецептов."
     )
-    def test_user_login(self, login_page, user_helper, base_page, main_page):
+    def test_user_login(self, login_page, base_page, main_page, registered_user):
         """Тест проверяет, что пользователь успешно вошел в систему"""
-        with allure.step("Регистрируем пользователя"):
-            user_name, password = user_helper.register_user()
-        with allure.step("Заполняем форму входа"):  
+        user_name, password =  registered_user
+        with allure.step("Заполняем форму входа"):
             login_page.populate_login_data(user_name, password)
         with allure.step("Ожидаем перехода на главную страницу"):
             base_page.wait_page_url("recipes")
