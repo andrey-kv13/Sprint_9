@@ -20,11 +20,10 @@ def driver():
         selenoid_uri = os.getenv("SELENOID_URI", "http://selenoid:4444/wd/hub")
         options = ChromeOptions()
         options.add_argument("--incognito")
-        capabilities = options.to_capabilities()
         
         driver = webdriver.Remote(
             command_executor=selenoid_uri,
-            desired_capabilities=capabilities
+            options=options
         )
     else:
         # Используем локальный Chrome WebDriver
