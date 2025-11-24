@@ -79,6 +79,14 @@ class BasePage:
             return False
         return True
     
+    def wait_page_url_not_contains(self, url_part):
+        """Ожидает, пока URL не перестанет содержать указанную часть"""
+        try:
+            self.wait.until(lambda driver: url_part not in driver.current_url)
+        except TimeoutException:
+            return False
+        return True
+    
     def get_current_url(self):
         """Получает текущий URL страницы"""
         return self.driver.current_url

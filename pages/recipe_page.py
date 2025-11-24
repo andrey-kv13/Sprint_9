@@ -54,6 +54,10 @@ class RecipePage(BasePage):
         self.send_keys(recipe_locators.RECIPE_DESCRIPTION_INPUT, "Тестовое описание рецепта")
         self.select_recipe_logo()
         self.click(recipe_locators.CREATE_RECIPE_BUTTON)
+        # Ждем, пока страница перезагрузится и URL изменится (убедимся, что "create" исчезнет из URL)
+        self.wait_page_url_not_contains("create")
+        # Дополнительно ждем появления карточки рецепта
+        self.find_element(recipe_locators.RECEIPE_CARD)
         return recipe_name
     
     def get_recipe_title(self):
