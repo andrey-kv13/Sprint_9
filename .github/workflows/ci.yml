@@ -28,7 +28,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y wget unzip
+        sudo apt-get install -y wget unzip docker-compose-plugin
         
     - name: Pull browser image
       run: |
@@ -37,11 +37,14 @@ jobs:
     - name: Start Selenoid
       run: |
         docker compose up -d
-        sleep 15  # Даем время Selenoid запуститься
+        sleep 20  # Даем время Selenoid запуститься
         docker ps  # Проверяем, что контейнер запущен
+        # Проверяем, что Selenoid отвечает
+        timeout 30 bash -c 'until curl -f http://localhost:4444/wd/hub/status; do sleep 1; done' || true
         
-    - name: Create allure-results directory
+    - name: Clean and create allure-results directory
       run: |
+        rm -rf allure-results
         mkdir -p allure-results
         
     - name: Run tests
