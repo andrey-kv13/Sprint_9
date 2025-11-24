@@ -30,6 +30,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y wget unzip
         
+    - name: Pull browser image
+      run: |
+        docker pull selenoid/chrome:120.0 || docker pull selenoid/vnc:chrome_120.0
+        
     - name: Start Selenoid
       run: |
         docker compose up -d
