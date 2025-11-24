@@ -28,7 +28,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y wget unzip docker-compose-plugin
+        sudo apt-get install -y wget unzip curl
         
     - name: Pull browser image
       run: |
