@@ -44,8 +44,9 @@ jobs:
         
     - name: Clean and create allure-results directory
       run: |
-        rm -rf allure-results
+        sudo rm -rf allure-results || true
         mkdir -p allure-results
+        sudo chmod -R 777 allure-results
         
     - name: Run tests
       env:
