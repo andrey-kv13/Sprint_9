@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, develop ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, develop ]
   workflow_dispatch:  # Позволяет запускать вручную
 
 jobs:
@@ -25,10 +25,28 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip curl
+        
+    - name: Pull browser image
+      run: |
+        docker pull selenoid/chrome:120.0 || docker pull selenoid/vnc:chrome_120.0
+        
     - name: Start Selenoid
       run: |
-        docker-compose up -d
-        sleep 10  # Даем время Selenoid запуститься
+        docker compose up -d
+        sleep 20  # Даем время Selenoid запуститься
+        docker ps  # Проверяем, что контейнер запущен
+        # Проверяем, что Selenoid отвечает
+        timeout 30 bash -c 'until curl -f http://localhost:4444/wd/hub/status; do sleep 1; done' || true
+        
+    - name: Clean and create allure-results directory
+      run: |
+        sudo rm -rf allure-results || true
+        mkdir -p allure-results
+        sudo chmod -R 777 allure-results
         
     - name: Run tests
       env:
@@ -57,6 +75,7 @@ jobs:
         name: allure-results
         path: allure-results/
         retention-days: 30
+        if-no-files-found: ignore
         
     - name: Upload Allure Report
       if: always()
@@ -65,8 +84,9 @@ jobs:
         name: allure-report
         path: allure-report/
         retention-days: 30
+        if-no-files-found: ignore
         
     - name: Stop Selenoid
       if: always()
       run: |
-        docker-compose down
+        docker compose down
